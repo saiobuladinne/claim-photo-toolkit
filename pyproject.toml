@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "claim-photo-toolkit"
+dynamic = ["version"]
+description = "Check car-damage photos submitted with insurance claims."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "claim-photo-toolkit contributors" }]
+keywords = ["insurance", "claims", "exif", "perceptual-hash", "image-forensics"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Image Processing",
+  "Typing :: Typed",
+]
+dependencies = [
+  "imagehash>=4.3.1",
+  "pillow>=10.4",
+]
+
+[project.optional-dependencies]
+ml = [
+  "torch>=2.2",
+  "transformers>=4.46",
+]
+dev = [
+  "mypy>=1.13",
+  "pytest>=8",
+  "ruff>=0.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/saiobuladinne/claim-photo-toolkit"
+Repository = "https://github.com/saiobuladinne/claim-photo-toolkit"
+Issues = "https://github.com/saiobuladinne/claim-photo-toolkit/issues"
+
+[project.scripts]
+claim-photo = "claim_photo_toolkit.cli:main"
+
+[tool.hatch.version]
+path = "src/claim_photo_toolkit/__init__.py"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "C4", "PIE", "RET"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["claim_photo_toolkit", "tests"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+mypy_path = "src"
+packages = ["claim_photo_toolkit"]
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["imagehash", "imagehash.*", "transformers", "transformers.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-q"]
+pythonpath = ["."]
