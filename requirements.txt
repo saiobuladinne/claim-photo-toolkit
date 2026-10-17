@@ -1,0 +1,11 @@
+# Runtime for inference.py (CPU, CUDA or Apple MPS). Pick the PyTorch build for your hardware
+# from https://pytorch.org if the default wheel does not suit you.
+# Verified in clean macOS environments on 2026-10-17 with torch 2.14.1, timm 1.0.30, safetensors 0.8.0,
+# huggingface_hub 2.2.0 and: Python 3.12 + NumPy 2.5.4 + Pillow 13.0.0; Python 3.10 + NumPy 2.2.6 + Pillow 12.3.0.
+torch>=2.14,<3
+torchvision>=0.29,<1
+timm>=1.0.30,<2
+safetensors>=0.8,<1
+pillow>=10.0
+numpy>=1.26,<3
+huggingface_hub>=2.1,<3
