@@ -6,9 +6,7 @@ Command-line and Python tools for checking whether **part of a car-damage photo 
 model locally and returns a suspicion score, a pass/flag decision and a **tamper heatmap**.
 
 - 🤗 Model: [obuladinnesai/car-damage-photo-integrity-v9](https://huggingface.co/obuladinnesai/car-damage-photo-integrity-v9), pinned to revision [`4b7b6ea`](https://huggingface.co/obuladinnesai/car-damage-photo-integrity-v9/tree/4b7b6ea59cc125119794b2f5a49efb966ec3e5ff)
-<!-- TODO: uncomment once the Space is running again
-- ▶️ Browser demo: [claim-photo-integrity-demo](https://huggingface.co/spaces/obuladinnesai/claim-photo-integrity-demo)
--->
+- ▶️ Browser demo (no install): [claim-photo-integrity-demo](https://huggingface.co/spaces/obuladinnesai/claim-photo-integrity-demo)
 
 > Research and screening tool. A flag is not proof of editing or fraud, and a pass does not
 > certify a photo as real. Keep a human in the loop.
