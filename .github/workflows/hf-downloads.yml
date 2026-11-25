@@ -1,0 +1,79 @@
+name: Update HF download badge
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh total-downloads badge
+        run: |
+          python3 << 'PY'
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          OUT = Path("badges/hf-downloads.json")
+
+          def fetch_models():
+              items = []
+              offset = 0
+              limit = 100
+              while True:
+                  url = (
+                      "https://huggingface.co/api/models"
+                      "?author=obuladinnesai"
+                      "&expand[]=downloadsAllTime"
+                      f"&limit={limit}&offset={offset}"
+                  )
+                  req = urllib.request.Request(
+                      url,
+                      headers={"User-Agent": "saiobuladinne-hf-downloads-badge"},
+                  )
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      batch = json.load(resp)
+                  if not isinstance(batch, list) or not batch:
+                      break
+                  items.extend(batch)
+                  if len(batch) < limit:
+                      break
+                  offset += limit
+              return items
+
+          models = fetch_models()
+          total = sum(int(m.get("downloadsAllTime") or 0) for m in models)
+          payload = {
+              "schemaVersion": 1,
+              "label": "total downloads (all models)",
+              "message": f"{total:,}",
+              "color": "blue",
+          }
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+          new = json.dumps(payload, indent=2) + "\n"
+          old = OUT.read_text() if OUT.exists() else None
+          if old != new:
+              OUT.write_text(new)
+              print(f"updated total={payload['message']} models={len(models)}")
+          else:
+              print(f"unchanged total={payload['message']} models={len(models)}")
+          PY
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add badges/hf-downloads.json
+          if git diff --staged --quiet; then
+            echo "No change"
+          else
+            git commit -m "Update HF total-downloads badge"
+            git push
+          fi
